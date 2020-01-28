@@ -1,0 +1,27 @@
+{
+  "type": "panel",
+  "name": "Slope Graph",
+  "id": "slope-graph",
+  "info": {
+    "description": "Slope Graph Grafana Plugin",
+    "author": {
+      "name": "NetSage",
+      "url": "http://www.netsage.global/"
+    },
+    "keywords": [
+      "netsage",
+      "slopegraph",
+      "plugin"
+    ],
+    "version": "0.0.2",
+    "updated": "2017-10-10",
+    "logos": {
+      "small": "src/images/netsage_logo.svg",
+      "large": "src/images/netsage_logo.svg"
+    }
+  },
+  "dependencies": {
+    "grafanaVersion": "3.x.x",
+    "plugins": []
+  }
+}
