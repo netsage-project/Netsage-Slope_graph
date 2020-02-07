@@ -1,7 +1,10 @@
-# netsage-slope-graph
-A grafana plugin that takes in pairs of organizations and displays the top 10 pairs in a slope graph.
-Query should get the sum of value.num_bits / 8 for top source & dest organizations
+# netsage-boilerplate-grafana-plugin
+A granfana plugin boilerplate for netsage 
 
+# Rename Boilerplate Plugin
+1. update `FULL_NAME` and `SHORT_NAME` in `Makefile`
+2. run `make name_change`
+3. update `PREV_FULL_NAME` and `PREV_SHORT_NAME` in `Makefile` to match current plugin name
 
 # Other Useful Makefile targets
 - `build` - runs gulp to build grafana plugin
