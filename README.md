@@ -1,6 +1,7 @@
 # netsage-slope-graph
-A grafana plugin that takes in pairs of organizations and displays the top 10 pairs in a slope graph.
-Query should get the sum of value.num_bits / 8 for top source & dest organizations
+A grafana plugin that takes Source/Dest pairs and displays the top N pairs in a slope graph.
+Query should get the sum of value.num_bits / 8 for top source & destinations.
+Number of Pairs and headers can be adjusted in the visualization panel.  Defaults to 10 pairs and source/dest organizations.
 
 
 # Other Useful Makefile targets
