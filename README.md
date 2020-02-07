@@ -1,5 +1,7 @@
-# netsage-boilerplate-grafana-plugin
-A granfana plugin boilerplate for netsage 
+# netsage-slope-graph
+A grafana plugin that takes Source/Dest pairs and displays the top N pairs in a slope graph.
+Query should get the sum of value.num_bits / 8 for top source & destinations.
+Number of Pairs and headers can be adjusted in the visualization panel.  Defaults to 10 pairs and source/dest organizations.
 
 # Rename Boilerplate Plugin
 1. update `FULL_NAME` and `SHORT_NAME` in `Makefile`
