@@ -42,3 +42,7 @@ div.tooltip {
 .axis {
     font-size: 13px;
 }
+
+.section-heading {
+    font-weight: bold;
+}

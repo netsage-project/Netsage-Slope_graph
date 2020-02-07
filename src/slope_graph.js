@@ -26,7 +26,11 @@ import SvgHandler from './js/slopegraph_svghandler';
 //import d3 from './js/slopegraph_d3.v3';
 
 ////// place global variables here ////
-const panelDefaults = {};
+const panelDefaults = {
+	num_pairs: 10,
+	header1: "Source Organization",
+	header2: "Destination Organization"
+};
 
 export class SlopeGraph extends MetricsPanelCtrl {
 	constructor($scope, $injector) {
@@ -41,6 +45,9 @@ export class SlopeGraph extends MetricsPanelCtrl {
 		this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
 		this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
 		this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
+
+		this.events.on('render', this.setup.bind(this));
+		this.events.on('refresh', this.setup.bind(this));
 	}
 
 	onDataReceived(dataList) {
@@ -49,8 +56,8 @@ export class SlopeGraph extends MetricsPanelCtrl {
 	}
 
 	process_data(dataList) {
-		console.log(dataList);
-		this.parsedData = ParseData(dataList);
+		console.log("this.num_pairs: " + this.panel.num_pairs)
+		this.parsedData = ParseData(dataList, this.panel.num_pairs);
 	}
 
 	onDataError(err) { }
@@ -68,8 +75,10 @@ export class SlopeGraph extends MetricsPanelCtrl {
 
 	link(scope, elem, attrs, ctrl) {
 		var self = this;
-		ctrl.events.on('render', self.setup.bind(self));
+		//ctrl.events.on('render', self.setup.bind(self));
 		//ctrl.events.on('refresh', self.setup.bind(self));
+
+	
 
 		var offh = document.getElementById(this.slopegraph_holder_id).offsetHeight;
 
@@ -77,7 +86,7 @@ export class SlopeGraph extends MetricsPanelCtrl {
 			return setTimeout(function () { this.render(); }, 250);
 		}
 
-		//this.render();
+		this.render();
 	}
 
 	setup() {
@@ -93,7 +102,7 @@ export class SlopeGraph extends MetricsPanelCtrl {
 			let svgHandler = new SvgHandler("chart-area");
 
 
-			svgHandler.renderGraph(this.parsedData, this);
+			svgHandler.renderGraph(this.parsedData, this, this.panel.header1, this.panel.header2);
 
 		}
 	}

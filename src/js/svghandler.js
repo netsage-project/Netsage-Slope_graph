@@ -5,11 +5,16 @@ class SvgHandler {
         this.containerID = id;
     }
 
-    renderGraph(parsedData, ctrl) {
+    renderGraph(parsedData, ctrl, header1, header2) {
 
         let top_10_pairs = parsedData.topPairs;
         let source_orgs = parsedData.srcOrgs;
         let dest_orgs = parsedData.destOrgs;
+        let alpha = parsedData.alpha;
+        let color_palette = parsedData.color_palette;
+
+        let min_value = top_10_pairs[top_10_pairs.length - 1][2]
+        let max_value = top_10_pairs[0][2]
 
         console.log("rendering Graph...");
 
@@ -18,7 +23,7 @@ class SvgHandler {
 
         console.log(this.containerID, top_10_pairs);
         // set the dimensions and margins of the graph
-        var margin = { top: 50, right: 350, bottom: 25, left: 350 },
+        var margin = { top: 50, right: 400, bottom: 25, left: 400 },
             width = panelWidth - margin.left - margin.right,
             height = ctrl.height - margin.top - margin.bottom;
 
@@ -91,22 +96,18 @@ class SvgHandler {
             })
 
         svg.append("g").call(leftAxis)
-            .attr("class","axis")
+            .attr("class", "axis")
             .attr("margin", 10)
             .selectAll(".tick text")
-            .call(wrap, margin.left - 25)
+            .call(wrap, margin.left - 50)
             .attr("transform", "translate(" + -10 + ",0)")
-            .on("mouseover", function(d) {
-                console.log(d);
-                console.log(this);
-            })
 
         svg.append("g")
             .attr("transform", "translate(" + width + ",0)")
             .call(rightAxis)
             .attr("class", "axis")
             .selectAll(".tick text")
-            .call(wrap, margin.right - 25)
+            .call(wrap, margin.right - 50)
             .attr("transform", "translate(" + 10 + ",0)")
 
 
@@ -114,7 +115,7 @@ class SvgHandler {
         // scale for width of lines
         var w = d3.scaleLinear()
             .domain([top_10_pairs[top_10_pairs.length - 1][2], top_10_pairs[0][2]])
-            .range([2, 12])
+            .range([3, 15])
 
         var div = d3.select("body").append("div")
             .attr("class", "tooltip")
@@ -128,11 +129,12 @@ class SvgHandler {
             svg.append("path")
                 .datum(top_10_pairs[i].coords)
                 .attr("fill", "none")
-                .attr("stroke", () => {
-                    var alpha = 0.7; // w(top_10_pairs[i][2]) / 5;
-                    var color = "rgba(51, 102, 255," + alpha + ")";
-                    return color;
-                })
+                .attr("stroke", function (d) { return d[0].color })
+                //() => {
+                //     var alpha = 0.7; // w(top_10_pairs[i][2]) / 5;
+                //     var color = "rgba(51, 102, 255," + alpha + ")";
+                //     return color;
+                // })
                 .attr("stroke-width", w(top_10_pairs[i][2]))
                 .attr("d", d3.line()
                     .x(function (d) { return x(d.x) })
@@ -144,8 +146,8 @@ class SvgHandler {
                         }
                     }))
                 .on("mouseover", function (d) {
-                    console.log(this);
-                    d3.select(this).attr("stroke", "darkblue").attr("class", "path-hover");
+                    d3.select(this).attr("stroke", "darkblue")
+                        .attr("class", "path-hover");
                     div.transition()
                         .duration(200)
                         .style("opacity", .9);
@@ -153,18 +155,18 @@ class SvgHandler {
                         var value = d[0].value;
                         value = value / 1000
                         if (value < 1000) {
-                            return (Math.round(value * 10)/10) + "KB";
+                            return (Math.round(value * 10) / 10) + "KB";
                         } else {
                             value = value / 1000;
                             if (value < 1000) {
-                                return (Math.round(value * 10)/10) + "MB"
+                                return (Math.round(value * 10) / 10) + "MB"
                             } else {
                                 value = value / 1000;
                                 if (value < 1000) {
-                                    return (Math.round(value * 10)/10) + "GB"
+                                    return (Math.round(value * 10) / 10) + "GB"
                                 } else {
                                     value = value / 1000;
-                                    return (Math.round(value * 10)/10) + "TB"
+                                    return (Math.round(value * 10) / 10) + "TB"
                                 }
                             }
                         }
@@ -172,31 +174,46 @@ class SvgHandler {
                         .style("left", (d3.event.pageX) + "px")
                         .style("top", (d3.event.pageY - 28) + "px")
                 })
-                .on("mouseout", function () {
+                .on("mouseout", function (d) {
                     div.transition()
                         .duration(500)
                         .style("opacity", 0);
                     d3.select(this).attr("stroke", () => {
-                        var alpha = 0.7; // d3.select(this).attr("stroke-width") / 5;
-                        var color = "rgba(51, 102, 255," + alpha + ")";
-                        return color;
+                        return d[0].color;
                     })
                 })
         }
 
         // Add axis labels
         svg.append("text")
-            .attr("class","header-text")
-            .attr("transform", "translate(" + -(margin.left/2) + "," + -(margin.top / 2) + ")")  // above left axis
+            .attr("class", "header-text")
+            .attr("transform", "translate(" + -(margin.left / 2) + "," + -(margin.top / 2) + ")")  // above left axis
             .attr("text-anchor", "center")
-            .text("Source Organization");
+            .text(header1);
 
         svg.append("text")
             .attr("class", "header-text")
-            .attr("transform", "translate(" + (width + margin.right/4) + "," + -(margin.top / 2) + ")")  // above right axis
+            .attr("transform", "translate(" + (width + margin.right / 5) + "," + -(margin.top / 2) + ")")  // above right axis
             .attr("text-anchor", "center")
-            .text("Destination Organization");
+            .text(header2);
 
+        // add legend
+
+        // var colorScale = d3.scaleQuantize()
+        //     .domain([min_value,max_value])
+        //     .range(color_palette);
+
+        // var colorLegend = d3.legendColor()
+        //     .labelFormat(d3.format(".0f"))
+        //     .scale(colorScale)
+        //     .shapePadding(3)
+        //     .shapeWidth(50)
+        //     .shapeHeight(20)
+        //     .labelOffset(12);
+
+        // svg.append("g")
+        //     .attr("transform", "translate(" + (width + margin.right / 2) + ", 60)")
+        //     .call(colorLegend);
     }
 
 }
