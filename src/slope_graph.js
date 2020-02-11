@@ -74,34 +74,26 @@ export class SlopeGraph extends MetricsPanelCtrl {
 	}
 
 	link(scope, elem, attrs, ctrl) {
-		var self = this;
-		//ctrl.events.on('render', self.setup.bind(self));
-		//ctrl.events.on('refresh', self.setup.bind(self));
 
-	
-
-		var offh = document.getElementById(this.slopegraph_holder_id).offsetHeight;
-
-		if (offh == 0) {
-			return setTimeout(function () { this.render(); }, 250);
+		if (!document.getElementById(ctrl.slopegraph_holder_id)) {
+			return;
 		}
-
 		this.render();
 	}
 
 	setup() {
+		var ctrl = this;
+		var offh = 450;
+		if (document.getElementById(this.slopegraph_holder_id)) {
+			offh = document.getElementById(this.slopegraph_holder_id).offsetHeight;
+		}
+		if (offh == 0) {
+			return setTimeout(function () { ctrl.setup(); }, 250);
+		}
 		var container = document.getElementById(this.containerDivId);
-
-
-
-
-
 		if (container) {
 			container.innerHTML = "<div id='chart-area'></div>";
-			//container.innerHTML = '<h1> Hello World</h1>';
 			let svgHandler = new SvgHandler("chart-area");
-
-
 			svgHandler.renderGraph(this.parsedData, this, this.panel.header1, this.panel.header2);
 
 		}

@@ -7,6 +7,10 @@ class SvgHandler {
 
     renderGraph(parsedData, ctrl, header1, header2) {
 
+        if (!parsedData) {
+            return;
+        }
+
         let top_10_pairs = parsedData.topPairs;
         let source_orgs = parsedData.srcOrgs;
         let dest_orgs = parsedData.destOrgs;
