@@ -139,7 +139,7 @@ class SvgHandler {
                 //     var color = "rgba(51, 102, 255," + alpha + ")";
                 //     return color;
                 // })
-                .attr("stroke-width", w(top_10_pairs[i][2]))
+                .attr("stroke-width", 8) // w(top_10_pairs[i][2]))
                 .attr("d", d3.line()
                     .x(function (d) { return x(d.x) })
                     .y(function (d) {
@@ -150,30 +150,37 @@ class SvgHandler {
                         }
                     }))
                 .on("mouseover", function (d) {
-                    d3.select(this).attr("stroke", "darkblue")
+                    d3.select(this).attr("stroke", "orange")
                         .attr("class", "path-hover");
                     div.transition()
                         .duration(200)
                         .style("opacity", .9);
                     div.html(() => {                    // takes in value in BYTES and converts to appropriate MB,GB, etc
-                        var value = d[0].value;
-                        value = value / 1000
+                        var value = d[0].value 
+                        value = value / 1000;
+                        var volume = value;
                         if (value < 1000) {
-                            return (Math.round(value * 10) / 10) + "KB";
+                            volume = (Math.round(value * 10) / 10) + " KB";
                         } else {
                             value = value / 1000;
                             if (value < 1000) {
-                                return (Math.round(value * 10) / 10) + "MB"
+                                volume = (Math.round(value * 10) / 10) + " MB"
                             } else {
                                 value = value / 1000;
                                 if (value < 1000) {
-                                    return (Math.round(value * 10) / 10) + "GB"
+                                    volume = (Math.round(value * 10) / 10) + " GB"
                                 } else {
                                     value = value / 1000;
-                                    return (Math.round(value * 10) / 10) + "TB"
+                                    if (value < 1000) {
+                                        volume = (Math.round(value * 10) / 10) + " TB"
+                                    } else {
+                                        volume = (Math.round(value * 10) / 10) + " PB"
+                                    }
                                 }
                             }
                         }
+                        var text = "<p><b>Source:</b> " + d[0].source + "</p><p><b>Destination:</b> " + d[0].dest + "</p><p><b>Volume:</b> " + volume;
+                        return text;
                     })
                         .style("left", (d3.event.pageX) + "px")
                         .style("top", (d3.event.pageY - 28) + "px")

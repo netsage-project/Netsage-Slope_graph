@@ -87,12 +87,20 @@ module.exports = function ParseData(data, num_pairs) {
     console.log("max val: " + max_value);
 
     for (i in top_10_pairs) {
-        let color_scale = Math.floor(top_10_pairs[i][2] / max_value * 10)
+        let color_scale = Math.ceil(top_10_pairs[i][2] / max_value * 10)
         if (color_scale > 0) {
             color_scale--;
         }
         top_10_pairs[i].coords[0].color = color_palette[color_scale];
+
+        // add source/dest to coords
+        top_10_pairs[i].coords[0].source = top_10_pairs[i][0];
+        top_10_pairs[i].coords[0].dest = top_10_pairs[i][1];
     }
+
+    
+
+
 
     console.log(top_10_pairs)
 
