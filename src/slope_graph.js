@@ -101,3 +101,5 @@ export class SlopeGraph extends MetricsPanelCtrl {
 }
 
 SlopeGraph.templateUrl = 'module.html';
+
+
